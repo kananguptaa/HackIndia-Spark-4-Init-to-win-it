@@ -1,11 +1,15 @@
-import type * as types from './types';
-import type { ConfigOptions, FetchResponse } from 'api/dist/core';
-import Oas from 'oas';
-import APICore from 'api/dist/core';
-declare class SDK {
-    spec: Oas;
-    core: APICore;
-    constructor();
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+var oas_1 = __importDefault(require("oas"));
+var core_1 = __importDefault(require("api/dist/core"));
+var openapi_json_1 = __importDefault(require("./openapi.json"));
+var SDK = /** @class */ (function () {
+    function SDK() {
+        this.spec = oas_1.default.init(openapi_json_1.default);
+        this.core = new core_1.default(this.spec, 'verbwire/1.0.0 (api/6.1.1)');
+    }
     /**
      * Optionally configure various options that the SDK allows.
      *
@@ -13,7 +17,9 @@ declare class SDK {
      * @param config.timeout Override the default `fetch` request timeout of 30 seconds. This number
      * should be represented in milliseconds.
      */
-    config(config: ConfigOptions): void;
+    SDK.prototype.config = function (config) {
+        this.core.setConfig(config);
+    };
     /**
      * If the API you're using requires authentication you can supply the required credentials
      * through this method and the library will magically determine how they should be used
@@ -35,7 +41,15 @@ declare class SDK {
      * @see {@link https://spec.openapis.org/oas/v3.1.0#fixed-fields-22}
      * @param values Your auth credentials for the API; can specify up to two strings or numbers.
      */
-    auth(...values: string[] | number[]): this;
+    SDK.prototype.auth = function () {
+        var _a;
+        var values = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            values[_i] = arguments[_i];
+        }
+        (_a = this.core).setAuth.apply(_a, values);
+        return this;
+    };
     /**
      * If the API you're using offers alternate server URLs, and server variables, you can tell
      * the SDK which one to use with this method. To use it you can supply either one of the
@@ -55,7 +69,10 @@ declare class SDK {
      * @param url Server URL
      * @param variables An object of variables to replace into the server URL.
      */
-    server(url: string, variables?: {}): void;
+    SDK.prototype.server = function (url, variables) {
+        if (variables === void 0) { variables = {}; }
+        this.core.setServer(url, variables);
+    };
     /**
      * Returns true/false if the wallet address is a holder of the token, as well as token
      * count and token ids
@@ -65,7 +82,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataIswalletholderoftokenResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataIswalletholderoftokenResponse404> Not found
      */
-    getNftDataIswalletholderoftoken(metadata: types.GetNftDataIswalletholderoftokenMetadataParam): Promise<FetchResponse<200, types.GetNftDataIswalletholderoftokenResponse200>>;
+    SDK.prototype.getNftDataIswalletholderoftoken = function (metadata) {
+        return this.core.fetch('/nft/data/isWalletHolderOfToken', 'get', metadata);
+    };
     /**
      * Returns a list of all NFTs held within a particular wallet address
      *
@@ -74,7 +93,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataOwnedResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataOwnedResponse404> Not found
      */
-    getNftDataOwned(metadata: types.GetNftDataOwnedMetadataParam): Promise<FetchResponse<200, types.GetNftDataOwnedResponse200>>;
+    SDK.prototype.getNftDataOwned = function (metadata) {
+        return this.core.fetch('/nft/data/owned', 'get', metadata);
+    };
     /**
      * Returns a list of all NFTs created by a particular wallet address
      *
@@ -83,7 +104,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataCreatedResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataCreatedResponse404> Not found
      */
-    getNftDataCreated(metadata: types.GetNftDataCreatedMetadataParam): Promise<FetchResponse<200, types.GetNftDataCreatedResponse200>>;
+    SDK.prototype.getNftDataCreated = function (metadata) {
+        return this.core.fetch('/nft/data/created', 'get', metadata);
+    };
     /**
      * Returns a list of all transactions by a particular wallet address
      *
@@ -92,7 +115,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataTransactionsResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataTransactionsResponse404> Not found
      */
-    getNftDataTransactions(metadata: types.GetNftDataTransactionsMetadataParam): Promise<FetchResponse<200, types.GetNftDataTransactionsResponse200>>;
+    SDK.prototype.getNftDataTransactions = function (metadata) {
+        return this.core.fetch('/nft/data/transactions', 'get', metadata);
+    };
     /**
      * Produce a list of all NFTs transactions for a specific NFT contract within a particular
      * wallet address
@@ -102,7 +127,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataTransactionsbycontractResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataTransactionsbycontractResponse404> Not found
      */
-    getNftDataTransactionsbycontract(metadata: types.GetNftDataTransactionsbycontractMetadataParam): Promise<FetchResponse<200, types.GetNftDataTransactionsbycontractResponse200>>;
+    SDK.prototype.getNftDataTransactionsbycontract = function (metadata) {
+        return this.core.fetch('/nft/data/transactionsByContract', 'get', metadata);
+    };
     /**
      * Returns all details for an NFT
      *
@@ -111,7 +138,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataNftdetailsResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataNftdetailsResponse404> Not found
      */
-    getNftDataNftdetails(metadata: types.GetNftDataNftdetailsMetadataParam): Promise<FetchResponse<200, types.GetNftDataNftdetailsResponse200>>;
+    SDK.prototype.getNftDataNftdetails = function (metadata) {
+        return this.core.fetch('/nft/data/nftDetails', 'get', metadata);
+    };
     /**
      * Returns the most recent floor price for an NFT project slug
      *
@@ -120,7 +149,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataLastfloorpriceforslugResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataLastfloorpriceforslugResponse404> Not found
      */
-    getNftDataLastfloorpriceforslug(metadata: types.GetNftDataLastfloorpriceforslugMetadataParam): Promise<FetchResponse<200, types.GetNftDataLastfloorpriceforslugResponse200>>;
+    SDK.prototype.getNftDataLastfloorpriceforslug = function (metadata) {
+        return this.core.fetch('/nft/data/lastFloorPriceForSlug', 'get', metadata);
+    };
     /**
      * Returns the most recent floor price for an NFT
      *
@@ -129,7 +160,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataLastfloorpriceforcontractaddressResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataLastfloorpriceforcontractaddressResponse404> Not found
      */
-    getNftDataLastfloorpriceforcontractaddress(metadata: types.GetNftDataLastfloorpriceforcontractaddressMetadataParam): Promise<FetchResponse<200, types.GetNftDataLastfloorpriceforcontractaddressResponse200>>;
+    SDK.prototype.getNftDataLastfloorpriceforcontractaddress = function (metadata) {
+        return this.core.fetch('/nft/data/lastFloorPriceForContractAddress', 'get', metadata);
+    };
     /**
      * Returns all floor price history for an NFT project slug
      *
@@ -138,7 +171,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataFloorpricesforslugResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataFloorpricesforslugResponse404> Not found
      */
-    getNftDataFloorpricesforslug(metadata: types.GetNftDataFloorpricesforslugMetadataParam): Promise<FetchResponse<200, types.GetNftDataFloorpricesforslugResponse200>>;
+    SDK.prototype.getNftDataFloorpricesforslug = function (metadata) {
+        return this.core.fetch('/nft/data/floorPricesForSlug', 'get', metadata);
+    };
     /**
      * Returns all floor price history for an NFT project
      *
@@ -147,7 +182,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataFloorpricesforcontractaddressResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataFloorpricesforcontractaddressResponse404> Not found
      */
-    getNftDataFloorpricesforcontractaddress(metadata: types.GetNftDataFloorpricesforcontractaddressMetadataParam): Promise<FetchResponse<200, types.GetNftDataFloorpricesforcontractaddressResponse200>>;
+    SDK.prototype.getNftDataFloorpricesforcontractaddress = function (metadata) {
+        return this.core.fetch('/nft/data/floorPricesForContractAddress', 'get', metadata);
+    };
     /**
      * Returns historical statistics for an NFT project slug
      *
@@ -156,7 +193,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataHistoricalstatsforslugResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataHistoricalstatsforslugResponse404> Not found
      */
-    getNftDataHistoricalstatsforslug(metadata: types.GetNftDataHistoricalstatsforslugMetadataParam): Promise<FetchResponse<200, types.GetNftDataHistoricalstatsforslugResponse200>>;
+    SDK.prototype.getNftDataHistoricalstatsforslug = function (metadata) {
+        return this.core.fetch('/nft/data/historicalStatsForSlug', 'get', metadata);
+    };
     /**
      * Returns historical statistics for an NFT project
      *
@@ -165,7 +204,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataHistoricalstatsforcontractaddressResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataHistoricalstatsforcontractaddressResponse404> Not found
      */
-    getNftDataHistoricalstatsforcontractaddress(metadata: types.GetNftDataHistoricalstatsforcontractaddressMetadataParam): Promise<FetchResponse<200, types.GetNftDataHistoricalstatsforcontractaddressResponse200>>;
+    SDK.prototype.getNftDataHistoricalstatsforcontractaddress = function (metadata) {
+        return this.core.fetch('/nft/data/historicalStatsForContractAddress', 'get', metadata);
+    };
     /**
      * Returns all sales events for a particular NFT project slug
      *
@@ -174,7 +215,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataSaleseventsforslugResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataSaleseventsforslugResponse404> Not found
      */
-    getNftDataSaleseventsforslug(metadata: types.GetNftDataSaleseventsforslugMetadataParam): Promise<FetchResponse<200, types.GetNftDataSaleseventsforslugResponse200>>;
+    SDK.prototype.getNftDataSaleseventsforslug = function (metadata) {
+        return this.core.fetch('/nft/data/salesEventsForSlug', 'get', metadata);
+    };
     /**
      * Returns all sales events for a particular NFT project slug
      *
@@ -183,7 +226,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataSaleseventsforcontractaddressResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataSaleseventsforcontractaddressResponse404> Not found
      */
-    getNftDataSaleseventsforcontractaddress(metadata: types.GetNftDataSaleseventsforcontractaddressMetadataParam): Promise<FetchResponse<200, types.GetNftDataSaleseventsforcontractaddressResponse200>>;
+    SDK.prototype.getNftDataSaleseventsforcontractaddress = function (metadata) {
+        return this.core.fetch('/nft/data/salesEventsForContractAddress', 'get', metadata);
+    };
     /**
      * Returns all transfer events for a particular NFT project slug
      *
@@ -192,7 +237,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataTransfereventsforslugResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataTransfereventsforslugResponse404> Not found
      */
-    getNftDataTransfereventsforslug(metadata: types.GetNftDataTransfereventsforslugMetadataParam): Promise<FetchResponse<200, types.GetNftDataTransfereventsforslugResponse200>>;
+    SDK.prototype.getNftDataTransfereventsforslug = function (metadata) {
+        return this.core.fetch('/nft/data/transferEventsForSlug', 'get', metadata);
+    };
     /**
      * Returns all transfer events for a particular NFT project slug
      *
@@ -201,7 +248,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataTransfereventsforcontractaddressResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataTransfereventsforcontractaddressResponse404> Not found
      */
-    getNftDataTransfereventsforcontractaddress(metadata: types.GetNftDataTransfereventsforcontractaddressMetadataParam): Promise<FetchResponse<200, types.GetNftDataTransfereventsforcontractaddressResponse200>>;
+    SDK.prototype.getNftDataTransfereventsforcontractaddress = function (metadata) {
+        return this.core.fetch('/nft/data/transferEventsForContractAddress', 'get', metadata);
+    };
     /**
      * Returns all wallets that own a particular NFT project slug
      *
@@ -210,7 +259,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataOwnershipforslugResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataOwnershipforslugResponse404> Not found
      */
-    getNftDataOwnershipforslug(metadata: types.GetNftDataOwnershipforslugMetadataParam): Promise<FetchResponse<200, types.GetNftDataOwnershipforslugResponse200>>;
+    SDK.prototype.getNftDataOwnershipforslug = function (metadata) {
+        return this.core.fetch('/nft/data/ownershipForSlug', 'get', metadata);
+    };
     /**
      * Returns all wallets that owna particular NFT project slug
      *
@@ -219,7 +270,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataOwnershipforcontractaddressResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataOwnershipforcontractaddressResponse404> Not found
      */
-    getNftDataOwnershipforcontractaddress(metadata: types.GetNftDataOwnershipforcontractaddressMetadataParam): Promise<FetchResponse<200, types.GetNftDataOwnershipforcontractaddressResponse200>>;
+    SDK.prototype.getNftDataOwnershipforcontractaddress = function (metadata) {
+        return this.core.fetch('/nft/data/ownershipForContractAddress', 'get', metadata);
+    };
     /**
      * Returns all collections indexed by Verbwire
      *
@@ -228,7 +281,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataCollectionsAllResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataCollectionsAllResponse404> Not found
      */
-    getNftDataCollectionsAll(metadata?: types.GetNftDataCollectionsAllMetadataParam): Promise<FetchResponse<200, types.GetNftDataCollectionsAllResponse200>>;
+    SDK.prototype.getNftDataCollectionsAll = function (metadata) {
+        return this.core.fetch('/nft/data/collections/all', 'get', metadata);
+    };
     /**
      * Searches all collections indexed by Verbwire for a given string
      *
@@ -237,7 +292,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataCollectionsSearchResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataCollectionsSearchResponse404> Not found
      */
-    getNftDataCollectionsSearch(metadata: types.GetNftDataCollectionsSearchMetadataParam): Promise<FetchResponse<200, types.GetNftDataCollectionsSearchResponse200>>;
+    SDK.prototype.getNftDataCollectionsSearch = function (metadata) {
+        return this.core.fetch('/nft/data/collections/search', 'get', metadata);
+    };
     /**
      * Returns all metadata attributes for a particular NFT project slug
      *
@@ -246,7 +303,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataAttributesforslugResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataAttributesforslugResponse404> Not found
      */
-    getNftDataAttributesforslug(metadata: types.GetNftDataAttributesforslugMetadataParam): Promise<FetchResponse<200, types.GetNftDataAttributesforslugResponse200>>;
+    SDK.prototype.getNftDataAttributesforslug = function (metadata) {
+        return this.core.fetch('/nft/data/attributesForSlug', 'get', metadata);
+    };
     /**
      * Returns all metadata attributes for an NFT contract address
      *
@@ -255,7 +314,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataAttributesforcontractaddressResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataAttributesforcontractaddressResponse404> Not found
      */
-    getNftDataAttributesforcontractaddress(metadata: types.GetNftDataAttributesforcontractaddressMetadataParam): Promise<FetchResponse<200, types.GetNftDataAttributesforcontractaddressResponse200>>;
+    SDK.prototype.getNftDataAttributesforcontractaddress = function (metadata) {
+        return this.core.fetch('/nft/data/attributesForContractAddress', 'get', metadata);
+    };
     /**
      * Returns all metadata attributes and corresponding token IDs for a particular NFT project
      * slug
@@ -265,7 +326,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataAttributeswithtokensforslugResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataAttributeswithtokensforslugResponse404> Not found
      */
-    getNftDataAttributeswithtokensforslug(metadata: types.GetNftDataAttributeswithtokensforslugMetadataParam): Promise<FetchResponse<200, types.GetNftDataAttributeswithtokensforslugResponse200>>;
+    SDK.prototype.getNftDataAttributeswithtokensforslug = function (metadata) {
+        return this.core.fetch('/nft/data/attributesWithTokensForSlug', 'get', metadata);
+    };
     /**
      * Returns all metadata attributes and corresponding token IDs for an NFT contract address
      *
@@ -274,7 +337,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataAttributeswithtokensforcontractaddressResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataAttributeswithtokensforcontractaddressResponse404> Not found
      */
-    getNftDataAttributeswithtokensforcontractaddress(metadata: types.GetNftDataAttributeswithtokensforcontractaddressMetadataParam): Promise<FetchResponse<200, types.GetNftDataAttributeswithtokensforcontractaddressResponse200>>;
+    SDK.prototype.getNftDataAttributeswithtokensforcontractaddress = function (metadata) {
+        return this.core.fetch('/nft/data/attributesWithTokensForContractAddress', 'get', metadata);
+    };
     /**
      * Returns all metadata attributes for a particular NFT project slug
      *
@@ -283,7 +348,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataSearchattributesinslugResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataSearchattributesinslugResponse404> Not found
      */
-    getNftDataSearchattributesinslug(metadata: types.GetNftDataSearchattributesinslugMetadataParam): Promise<FetchResponse<200, types.GetNftDataSearchattributesinslugResponse200>>;
+    SDK.prototype.getNftDataSearchattributesinslug = function (metadata) {
+        return this.core.fetch('/nft/data/searchAttributesInSlug', 'get', metadata);
+    };
     /**
      * Returns all metadata attributes for an NFT contract address
      *
@@ -292,7 +359,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftDataSearchattributesincontractaddressResponse403> Forbidden
      * @throws FetchError<404, types.GetNftDataSearchattributesincontractaddressResponse404> Not found
      */
-    getNftDataSearchattributesincontractaddress(metadata: types.GetNftDataSearchattributesincontractaddressMetadataParam): Promise<FetchResponse<200, types.GetNftDataSearchattributesincontractaddressResponse200>>;
+    SDK.prototype.getNftDataSearchattributesincontractaddress = function (metadata) {
+        return this.core.fetch('/nft/data/searchAttributesInContractAddress', 'get', metadata);
+    };
     /**
      * Deploy your smart contract in seconds. Supports multiple types of contracts - (i) A
      * standard ERC721 contract (ii) An ERC1155 contract (iii) An ERC721A contract (iv) An
@@ -303,28 +372,36 @@ declare class SDK {
      * @summary Deploy a Smart Contract
      * @throws FetchError<400, types.PostNftDeployDeploycontractResponse400> Failed
      */
-    postNftDeployDeploycontract(body: types.PostNftDeployDeploycontractBodyParam): Promise<FetchResponse<200, types.PostNftDeployDeploycontractResponse200>>;
+    SDK.prototype.postNftDeployDeploycontract = function (body) {
+        return this.core.fetch('/nft/deploy/deployContract', 'post', body);
+    };
     /**
      * Mint an Omnichain NFT directly from your specified image file in seconds
      *
      * @summary Quick mint Omnichain NFT from image
      * @throws FetchError<400, types.PostNftMintQuickmintfromfileResponse400> Failed
      */
-    postNftMintQuickmintfromfile(body: types.PostNftMintQuickmintfromfileBodyParam): Promise<FetchResponse<200, types.PostNftMintQuickmintfromfileResponse200>>;
+    SDK.prototype.postNftMintQuickmintfromfile = function (body) {
+        return this.core.fetch('/nft/mint/quickMintFromFile', 'post', body);
+    };
     /**
      * Mint an Omnichain NFT directly from a provided metadata file URL
      *
      * @summary Quick mint from Metadata URL
      * @throws FetchError<400, types.PostNftMintQuickmintfrommetadataurlResponse400> Failed
      */
-    postNftMintQuickmintfrommetadataurl(body: types.PostNftMintQuickmintfrommetadataurlBodyParam): Promise<FetchResponse<200, types.PostNftMintQuickmintfrommetadataurlResponse200>>;
+    SDK.prototype.postNftMintQuickmintfrommetadataurl = function (body) {
+        return this.core.fetch('/nft/mint/quickMintFromMetadataUrl', 'post', body);
+    };
     /**
      * Mint an Omnichain NFT directly with your supplied data in seconds
      *
      * @summary Quick mint Omnichain NFT from Metadata
      * @throws FetchError<400, types.PostNftMintQuickmintfrommetadataResponse400> Failed
      */
-    postNftMintQuickmintfrommetadata(body: types.PostNftMintQuickmintfrommetadataBodyParam): Promise<FetchResponse<200, types.PostNftMintQuickmintfrommetadataResponse200>>;
+    SDK.prototype.postNftMintQuickmintfrommetadata = function (body) {
+        return this.core.fetch('/nft/mint/quickMintFromMetadata', 'post', body);
+    };
     /**
      * Mint an NFT directly from your specified image file in seconds, using your own contract.
      * Suppports multiple contract types.
@@ -332,7 +409,9 @@ declare class SDK {
      * @summary Mint NFT from image
      * @throws FetchError<400, types.PostNftMintMintfromfileResponse400> Failed
      */
-    postNftMintMintfromfile(body: types.PostNftMintMintfromfileBodyParam): Promise<FetchResponse<200, types.PostNftMintMintfromfileResponse200>>;
+    SDK.prototype.postNftMintMintfromfile = function (body) {
+        return this.core.fetch('/nft/mint/mintFromFile', 'post', body);
+    };
     /**
      * Mint an NFT directly from a provided metadata file URL, using your own contract.
      * Supports multiple contract types.
@@ -340,7 +419,9 @@ declare class SDK {
      * @summary Mint NFT from Metadata URL
      * @throws FetchError<400, types.PostNftMintMintfrommetadataurlResponse400> Failed
      */
-    postNftMintMintfrommetadataurl(body: types.PostNftMintMintfrommetadataurlBodyParam): Promise<FetchResponse<200, types.PostNftMintMintfrommetadataurlResponse200>>;
+    SDK.prototype.postNftMintMintfrommetadataurl = function (body) {
+        return this.core.fetch('/nft/mint/mintFromMetadataUrl', 'post', body);
+    };
     /**
      * Mint an NFT directly with your supplied data in seconds, using your own contract.
      * Supports multiple contract types.
@@ -348,7 +429,9 @@ declare class SDK {
      * @summary Mint NFT from metadata
      * @throws FetchError<400, types.PostNftMintMintfrommetadataResponse400> Failed
      */
-    postNftMintMintfrommetadata(body: types.PostNftMintMintfrommetadataBodyParam): Promise<FetchResponse<200, types.PostNftMintMintfrommetadataResponse200>>;
+    SDK.prototype.postNftMintMintfrommetadata = function (body) {
+        return this.core.fetch('/nft/mint/mintFromMetadata', 'post', body);
+    };
     /**
      * Mint an NFT using a collection contract, to a provided wallet address. Works with only
      * collection contracts.
@@ -356,14 +439,18 @@ declare class SDK {
      * @summary Collection Mint to a Wallet Address
      * @throws FetchError<400, types.PostNftMintCollectionreservemintResponse400> Failed
      */
-    postNftMintCollectionreservemint(body: types.PostNftMintCollectionreservemintBodyParam): Promise<FetchResponse<200, types.PostNftMintCollectionreservemintResponse200>>;
+    SDK.prototype.postNftMintCollectionreservemint = function (body) {
+        return this.core.fetch('/nft/mint/collectionReserveMint', 'post', body);
+    };
     /**
      * Create a new ERC1155 Token and mint an initial quantity immediately.
      *
      * @summary Create Token
      * @throws FetchError<400, types.PostNftMintCreatetoken1155Response400> Failed
      */
-    postNftMintCreatetoken1155(body: types.PostNftMintCreatetoken1155BodyParam): Promise<FetchResponse<200, types.PostNftMintCreatetoken1155Response200>>;
+    SDK.prototype.postNftMintCreatetoken1155 = function (body) {
+        return this.core.fetch('/nft/mint/createToken1155', 'post', body);
+    };
     /**
      * Uploads a local file directly to IPFS. A quick and seamless way to store a file in IPFS.
      * This does not create a metadata json file that can be used as an NFT metadata.
@@ -371,7 +458,9 @@ declare class SDK {
      * @summary Upload a local file to IPFS
      * @throws FetchError<400, types.PostNftStoreFileResponse400> Failed
      */
-    postNftStoreFile(body: types.PostNftStoreFileBodyParam): Promise<FetchResponse<201, types.PostNftStoreFileResponse201>>;
+    SDK.prototype.postNftStoreFile = function (body) {
+        return this.core.fetch('/nft/store/file', 'post', body);
+    };
     /**
      * Uploads a file to IPFS from a provided url. A quick and seamless way to store a file in
      * IPFS. This does not create a metadata json file that can be used as an NFT metadata.
@@ -379,7 +468,9 @@ declare class SDK {
      * @summary Upload a file via URL to IPFS
      * @throws FetchError<400, types.PostNftStoreFilefromurlResponse400> Failed
      */
-    postNftStoreFilefromurl(body: types.PostNftStoreFilefromurlFormDataParam): Promise<FetchResponse<201, types.PostNftStoreFilefromurlResponse201>>;
+    SDK.prototype.postNftStoreFilefromurl = function (body) {
+        return this.core.fetch('/nft/store/fileFromUrl', 'post', body);
+    };
     /**
      * Creates a metadata json file from the provided URL and uploads the metadata file direcly
      * to IPFS, all in one operation.
@@ -387,7 +478,9 @@ declare class SDK {
      * @summary Upload a URL to IPFS as NFT metadata
      * @throws FetchError<400, types.PostNftStoreMetadatafromimageurlResponse400> Failed
      */
-    postNftStoreMetadatafromimageurl(body: types.PostNftStoreMetadatafromimageurlFormDataParam): Promise<FetchResponse<201, types.PostNftStoreMetadatafromimageurlResponse201>>;
+    SDK.prototype.postNftStoreMetadatafromimageurl = function (body) {
+        return this.core.fetch('/nft/store/metadataFromImageUrl', 'post', body);
+    };
     /**
      * Creates a metadata json file from the provided local file, and uploads the metadata file
      * directly to IPFS, all in one operation.
@@ -395,7 +488,9 @@ declare class SDK {
      * @summary Upload local file as metadata to IPFS
      * @throws FetchError<400, types.PostNftStoreMetadatafromimageResponse400> Failed
      */
-    postNftStoreMetadatafromimage(body: types.PostNftStoreMetadatafromimageBodyParam): Promise<FetchResponse<201, types.PostNftStoreMetadatafromimageResponse201>>;
+    SDK.prototype.postNftStoreMetadatafromimage = function (body) {
+        return this.core.fetch('/nft/store/metadataFromImage', 'post', body);
+    };
     /**
      * Uploads a directory of metadata json files to IPFS. Useful for creating nft collections.
      * The files in your directory should be numbered, example &#58; 1.json, 2.json, 3.json.
@@ -406,7 +501,9 @@ declare class SDK {
      * @summary Upload a directory to IPFS
      * @throws FetchError<400, types.PostNftStoreUploaddirectoryResponse400> Failed
      */
-    postNftStoreUploaddirectory(body: types.PostNftStoreUploaddirectoryBodyParam): Promise<FetchResponse<201, types.PostNftStoreUploaddirectoryResponse201>>;
+    SDK.prototype.postNftStoreUploaddirectory = function (body) {
+        return this.core.fetch('/nft/store/uploadDirectory', 'post', body);
+    };
     /**
      * Sends a quick-minted NFT from one block chain to another. Sending NFTs accross chains is
      * a unique feature of Omnichain NFTs
@@ -414,7 +511,9 @@ declare class SDK {
      * @summary Send Quick-minted NFT across Chains
      * @throws FetchError<400, types.PostNftSendQuicksendResponse400> Failed
      */
-    postNftSendQuicksend(body: types.PostNftSendQuicksendBodyParam): Promise<FetchResponse<200, types.PostNftSendQuicksendResponse200>>;
+    SDK.prototype.postNftSendQuicksend = function (body) {
+        return this.core.fetch('/nft/send/quickSend', 'post', body);
+    };
     /**
      * Turn on the ability to send your NFT (minted with your created custom contract) across
      * chains
@@ -422,7 +521,9 @@ declare class SDK {
      * @summary Enable Cross-chain Sends
      * @throws FetchError<400, types.PostNftSendEnablecrosschainsendResponse400> Failed
      */
-    postNftSendEnablecrosschainsend(body: types.PostNftSendEnablecrosschainsendBodyParam): Promise<FetchResponse<200, types.PostNftSendEnablecrosschainsendResponse200>>;
+    SDK.prototype.postNftSendEnablecrosschainsend = function (body) {
+        return this.core.fetch('/nft/send/enableCrossChainSend', 'post', body);
+    };
     /**
      * Sends an NFT (minted from your created custom contract) from one block chain to another.
      * Sending NFTs accross chains is a unique feature of Omnichain NFTs
@@ -430,42 +531,54 @@ declare class SDK {
      * @summary Send your NFT across Chains
      * @throws FetchError<400, types.PostNftSendCrosschainsendResponse400> Failed
      */
-    postNftSendCrosschainsend(body: types.PostNftSendCrosschainsendBodyParam): Promise<FetchResponse<200, types.PostNftSendCrosschainsendResponse200>>;
+    SDK.prototype.postNftSendCrosschainsend = function (body) {
+        return this.core.fetch('/nft/send/crossChainSend', 'post', body);
+    };
     /**
      * Transfer NFT across wallet addresses
      *
      * @summary Transfer Token
      * @throws FetchError<400, types.PostNftUpdateTransfertokenResponse400> Failed
      */
-    postNftUpdateTransfertoken(body: types.PostNftUpdateTransfertokenBodyParam): Promise<FetchResponse<200, types.PostNftUpdateTransfertokenResponse200>>;
+    SDK.prototype.postNftUpdateTransfertoken = function (body) {
+        return this.core.fetch('/nft/update/transferToken', 'post', body);
+    };
     /**
      * Update NFT Metadata
      *
      * @summary Update NFT Metadata
      * @throws FetchError<400, types.PostNftUpdateUpdatetokenmetadataResponse400> Failed
      */
-    postNftUpdateUpdatetokenmetadata(body: types.PostNftUpdateUpdatetokenmetadataBodyParam): Promise<FetchResponse<200, types.PostNftUpdateUpdatetokenmetadataResponse200>>;
+    SDK.prototype.postNftUpdateUpdatetokenmetadata = function (body) {
+        return this.core.fetch('/nft/update/updateTokenMetadata', 'post', body);
+    };
     /**
      * Freeze metadata on the NFT contract
      *
      * @summary Freeze NFT Metadata
      * @throws FetchError<400, types.PostNftUpdateFreezemetadataResponse400> Failed
      */
-    postNftUpdateFreezemetadata(body: types.PostNftUpdateFreezemetadataBodyParam): Promise<FetchResponse<200, types.PostNftUpdateFreezemetadataResponse200>>;
+    SDK.prototype.postNftUpdateFreezemetadata = function (body) {
+        return this.core.fetch('/nft/update/freezeMetadata', 'post', body);
+    };
     /**
      * Set the mint price for your contract
      *
      * @summary Set Mint Price
      * @throws FetchError<400, types.PostNftUpdateSetmintpriceResponse400> Failed
      */
-    postNftUpdateSetmintprice(body: types.PostNftUpdateSetmintpriceBodyParam): Promise<FetchResponse<200, types.PostNftUpdateSetmintpriceResponse200>>;
+    SDK.prototype.postNftUpdateSetmintprice = function (body) {
+        return this.core.fetch('/nft/update/setMintPrice', 'post', body);
+    };
     /**
      * Set the allowlist mint price for your contract
      *
      * @summary Set Allowlist Mint Price
      * @throws FetchError<400, types.PostNftUpdateSetallowlistmintpriceResponse400> Failed
      */
-    postNftUpdateSetallowlistmintprice(body: types.PostNftUpdateSetallowlistmintpriceBodyParam): Promise<FetchResponse<200, types.PostNftUpdateSetallowlistmintpriceResponse200>>;
+    SDK.prototype.postNftUpdateSetallowlistmintprice = function (body) {
+        return this.core.fetch('/nft/update/setAllowListMintPrice', 'post', body);
+    };
     /**
      * Burn an NFT. Contract types supported are the Collection contract and Simple Contract
      * types.
@@ -473,7 +586,9 @@ declare class SDK {
      * @summary Burn NFT
      * @throws FetchError<400, types.PostNftUpdateBurnResponse400> Failed
      */
-    postNftUpdateBurn(body: types.PostNftUpdateBurnBodyParam): Promise<FetchResponse<200, types.PostNftUpdateBurnResponse200>>;
+    SDK.prototype.postNftUpdateBurn = function (body) {
+        return this.core.fetch('/nft/update/burn', 'post', body);
+    };
     /**
      * Withdraw funds from your smart contract.
      *
@@ -482,7 +597,9 @@ declare class SDK {
      * @throws FetchError<403, types.PostNftUpdateWithdrawfundsResponse403> Forbidden
      * @throws FetchError<404, types.PostNftUpdateWithdrawfundsResponse404> Not found
      */
-    postNftUpdateWithdrawfunds(body: types.PostNftUpdateWithdrawfundsFormDataParam): Promise<FetchResponse<200, types.PostNftUpdateWithdrawfundsResponse200>>;
+    SDK.prototype.postNftUpdateWithdrawfunds = function (body) {
+        return this.core.fetch('/nft/update/withdrawFunds', 'post', body);
+    };
     /**
      * Withdraw funds from your smart contract to a specified wallet.
      *
@@ -491,7 +608,9 @@ declare class SDK {
      * @throws FetchError<403, types.PostNftUpdateWithdrawfundstowalletResponse403> Forbidden
      * @throws FetchError<404, types.PostNftUpdateWithdrawfundstowalletResponse404> Not found
      */
-    postNftUpdateWithdrawfundstowallet(body: types.PostNftUpdateWithdrawfundstowalletFormDataParam): Promise<FetchResponse<200, types.PostNftUpdateWithdrawfundstowalletResponse200>>;
+    SDK.prototype.postNftUpdateWithdrawfundstowallet = function (body) {
+        return this.core.fetch('/nft/update/withdrawFundsToWallet', 'post', body);
+    };
     /**
      * Transfer the Operator of your deployed collection contract. Works with only collection
      * contracts.
@@ -501,7 +620,9 @@ declare class SDK {
      * @throws FetchError<403, types.PostNftUpdateTransferoperatorResponse403> Forbidden
      * @throws FetchError<404, types.PostNftUpdateTransferoperatorResponse404> Not found
      */
-    postNftUpdateTransferoperator(body: types.PostNftUpdateTransferoperatorFormDataParam): Promise<FetchResponse<200, types.PostNftUpdateTransferoperatorResponse200>>;
+    SDK.prototype.postNftUpdateTransferoperator = function (body) {
+        return this.core.fetch('/nft/update/transferOperator', 'post', body);
+    };
     /**
      * Add an address (or group of addresses) to the allowlist of your NFT contract.
      *
@@ -510,21 +631,27 @@ declare class SDK {
      * @throws FetchError<403, types.PostNftUpdateAddtoallowlistResponse403> Forbidden
      * @throws FetchError<404, types.PostNftUpdateAddtoallowlistResponse404> Not found
      */
-    postNftUpdateAddtoallowlist(body: types.PostNftUpdateAddtoallowlistFormDataParam): Promise<FetchResponse<200, types.PostNftUpdateAddtoallowlistResponse200>>;
+    SDK.prototype.postNftUpdateAddtoallowlist = function (body) {
+        return this.core.fetch('/nft/update/addToAllowList', 'post', body);
+    };
     /**
      * Set the parameters of your deployed collection contract
      *
      * @summary Initialize your collection contract
      * @throws FetchError<400, types.PostNftUpdateInitcollectioncontractResponse400> Failed
      */
-    postNftUpdateInitcollectioncontract(body: types.PostNftUpdateInitcollectioncontractBodyParam): Promise<FetchResponse<200, types.PostNftUpdateInitcollectioncontractResponse200>>;
+    SDK.prototype.postNftUpdateInitcollectioncontract = function (body) {
+        return this.core.fetch('/nft/update/initCollectionContract', 'post', body);
+    };
     /**
      * Update parameters of your collection contract
      *
      * @summary Update Collection Contract
      * @throws FetchError<400, types.PostNftDeployUpdatecontractResponse400> Failed
      */
-    postNftDeployUpdatecontract(body: types.PostNftDeployUpdatecontractBodyParam): Promise<FetchResponse<200, types.PostNftDeployUpdatecontractResponse200>>;
+    SDK.prototype.postNftDeployUpdatecontract = function (body) {
+        return this.core.fetch('/nft/deploy/updateContract', 'post', body);
+    };
     /**
      * Set the minimum acceptable payment price for your contract. This will be the minimum
      * price payable to your smart contract. This functionality only applies to Commerce
@@ -533,7 +660,9 @@ declare class SDK {
      * @summary Set a payment price for your Commerce Contract
      * @throws FetchError<400, types.PostNftUpdateSetpaymentpriceResponse400> Failed
      */
-    postNftUpdateSetpaymentprice(body: types.PostNftUpdateSetpaymentpriceBodyParam): Promise<FetchResponse<200, types.PostNftUpdateSetpaymentpriceResponse200>>;
+    SDK.prototype.postNftUpdateSetpaymentprice = function (body) {
+        return this.core.fetch('/nft/update/setPaymentPrice', 'post', body);
+    };
     /**
      * Pause/Unpause your commerce contract. Pausing your commerce contract stops it from being
      * able to continue receiving payments. You can pause/unpause your contract anytime.
@@ -541,7 +670,9 @@ declare class SDK {
      * @summary Pause/Unpause a Commerce Contract
      * @throws FetchError<400, types.PostNftUpdateTogglepausedstateResponse400> Failed
      */
-    postNftUpdateTogglepausedstate(body: types.PostNftUpdateTogglepausedstateBodyParam): Promise<FetchResponse<200, types.PostNftUpdateTogglepausedstateResponse200>>;
+    SDK.prototype.postNftUpdateTogglepausedstate = function (body) {
+        return this.core.fetch('/nft/update/togglePausedState', 'post', body);
+    };
     /**
      * Pause/Unpause public minting on your NFT contract. Use this feature to
      * activate/deactivate public minting on your NFT contract. Only advanced contracts can
@@ -550,7 +681,9 @@ declare class SDK {
      * @summary Pause/Unpause public minting
      * @throws FetchError<400, types.PostNftUpdateTogglepublicmintingResponse400> Failed
      */
-    postNftUpdateTogglepublicminting(body: types.PostNftUpdateTogglepublicmintingBodyParam): Promise<FetchResponse<200, types.PostNftUpdateTogglepublicmintingResponse200>>;
+    SDK.prototype.postNftUpdateTogglepublicminting = function (body) {
+        return this.core.fetch('/nft/update/togglePublicMinting', 'post', body);
+    };
     /**
      * Set the max quantity that can be minted in one batch. This feature is available only to
      * advanced contracts.
@@ -558,7 +691,9 @@ declare class SDK {
      * @summary Set max batch size for minting
      * @throws FetchError<400, types.PostNftUpdateSetmaxmintquantityperbatchResponse400> Failed
      */
-    postNftUpdateSetmaxmintquantityperbatch(body: types.PostNftUpdateSetmaxmintquantityperbatchBodyParam): Promise<FetchResponse<200, types.PostNftUpdateSetmaxmintquantityperbatchResponse200>>;
+    SDK.prototype.postNftUpdateSetmaxmintquantityperbatch = function (body) {
+        return this.core.fetch('/nft/update/setMaxMintQuantityPerBatch', 'post', body);
+    };
     /**
      * Enable a wallet address to receive funds from a contract. Use payeeShares to control
      * payout ratio.
@@ -568,7 +703,9 @@ declare class SDK {
      * @throws FetchError<403, types.PostNftUpdateAddpayeeResponse403> Forbidden
      * @throws FetchError<404, types.PostNftUpdateAddpayeeResponse404> Not found
      */
-    postNftUpdateAddpayee(body: types.PostNftUpdateAddpayeeFormDataParam): Promise<FetchResponse<200, types.PostNftUpdateAddpayeeResponse200>>;
+    SDK.prototype.postNftUpdateAddpayee = function (body) {
+        return this.core.fetch('/nft/update/addPayee', 'post', body);
+    };
     /**
      * Produce a list of all your deployed contracts
      *
@@ -577,7 +714,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftUseropsDeployedcontractsResponse403> Forbidden
      * @throws FetchError<404, types.GetNftUseropsDeployedcontractsResponse404> Not found
      */
-    getNftUseropsDeployedcontracts(): Promise<FetchResponse<200, types.GetNftUseropsDeployedcontractsResponse200>>;
+    SDK.prototype.getNftUseropsDeployedcontracts = function () {
+        return this.core.fetch('/nft/userOps/deployedContracts', 'get');
+    };
     /**
      * Produce a list of all your minted NFTs
      *
@@ -586,7 +725,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftUseropsNftsmintedResponse403> Forbidden
      * @throws FetchError<404, types.GetNftUseropsNftsmintedResponse404> Not found
      */
-    getNftUseropsNftsminted(): Promise<FetchResponse<200, types.GetNftUseropsNftsmintedResponse200>>;
+    SDK.prototype.getNftUseropsNftsminted = function () {
+        return this.core.fetch('/nft/userOps/nftsMinted', 'get');
+    };
     /**
      * Produce a list of all your minted NFTs
      *
@@ -595,7 +736,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftUseropsIpfsuploadsResponse403> Forbidden
      * @throws FetchError<404, types.GetNftUseropsIpfsuploadsResponse404> Not found
      */
-    getNftUseropsIpfsuploads(): Promise<FetchResponse<200, types.GetNftUseropsIpfsuploadsResponse200>>;
+    SDK.prototype.getNftUseropsIpfsuploads = function () {
+        return this.core.fetch('/nft/userOps/ipfsUploads', 'get');
+    };
     /**
      * Get details for a specific transaction
      *
@@ -604,7 +747,9 @@ declare class SDK {
      * @throws FetchError<403, types.PostNftUseropsTransactiondetailsResponse403> Forbidden
      * @throws FetchError<404, types.PostNftUseropsTransactiondetailsResponse404> Not found
      */
-    postNftUseropsTransactiondetails(body: types.PostNftUseropsTransactiondetailsFormDataParam): Promise<FetchResponse<200, types.PostNftUseropsTransactiondetailsResponse200>>;
+    SDK.prototype.postNftUseropsTransactiondetails = function (body) {
+        return this.core.fetch('/nft/userOps/transactionDetails', 'post', body);
+    };
     /**
      * Display details of Payee at a certain Index.
      *
@@ -613,7 +758,9 @@ declare class SDK {
      * @throws FetchError<403, types.PostNftUseropsPayeeatindexResponse403> Forbidden
      * @throws FetchError<404, types.PostNftUseropsPayeeatindexResponse404> Not found
      */
-    postNftUseropsPayeeatindex(body: types.PostNftUseropsPayeeatindexFormDataParam): Promise<FetchResponse<200, types.PostNftUseropsPayeeatindexResponse200>>;
+    SDK.prototype.postNftUseropsPayeeatindex = function (body) {
+        return this.core.fetch('/nft/userOps/payeeAtIndex', 'post', body);
+    };
     /**
      * Display Allowlist shares for a specific address.
      *
@@ -622,7 +769,9 @@ declare class SDK {
      * @throws FetchError<403, types.PostNftUseropsAllowlistsharesforaddressResponse403> Forbidden
      * @throws FetchError<404, types.PostNftUseropsAllowlistsharesforaddressResponse404> Not found
      */
-    postNftUseropsAllowlistsharesforaddress(body: types.PostNftUseropsAllowlistsharesforaddressFormDataParam): Promise<FetchResponse<200, types.PostNftUseropsAllowlistsharesforaddressResponse200>>;
+    SDK.prototype.postNftUseropsAllowlistsharesforaddress = function (body) {
+        return this.core.fetch('/nft/userOps/allowListSharesForAddress', 'post', body);
+    };
     /**
      * Display payment details for a specific payee of a contract.
      *
@@ -631,7 +780,9 @@ declare class SDK {
      * @throws FetchError<403, types.PostNftUseropsContractpaymentdetailsResponse403> Forbidden
      * @throws FetchError<404, types.PostNftUseropsContractpaymentdetailsResponse404> Not found
      */
-    postNftUseropsContractpaymentdetails(body: types.PostNftUseropsContractpaymentdetailsFormDataParam): Promise<FetchResponse<200, types.PostNftUseropsContractpaymentdetailsResponse200>>;
+    SDK.prototype.postNftUseropsContractpaymentdetails = function (body) {
+        return this.core.fetch('/nft/userOps/contractPaymentDetails', 'post', body);
+    };
     /**
      * Displays the amount of funds left on the contract
      *
@@ -640,7 +791,9 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftUseropsContractbalanceResponse403> Forbidden
      * @throws FetchError<404, types.GetNftUseropsContractbalanceResponse404> Not found
      */
-    getNftUseropsContractbalance(metadata: types.GetNftUseropsContractbalanceMetadataParam): Promise<FetchResponse<200, types.GetNftUseropsContractbalanceResponse200>>;
+    SDK.prototype.getNftUseropsContractbalance = function (metadata) {
+        return this.core.fetch('/nft/userOps/contractBalance', 'get', metadata);
+    };
     /**
      * Displays details of your contract
      *
@@ -649,14 +802,19 @@ declare class SDK {
      * @throws FetchError<403, types.GetNftUseropsContractdetailsResponse403> Forbidden
      * @throws FetchError<404, types.GetNftUseropsContractdetailsResponse404> Not found
      */
-    getNftUseropsContractdetails(metadata: types.GetNftUseropsContractdetailsMetadataParam): Promise<FetchResponse<200, types.GetNftUseropsContractdetailsResponse200>>;
+    SDK.prototype.getNftUseropsContractdetails = function (metadata) {
+        return this.core.fetch('/nft/userOps/contractDetails', 'get', metadata);
+    };
     /**
      * Send a new digital asset to anyone via email
      *
      * @summary Email Digital Asset
      * @throws FetchError<400, types.PostTransfersUserclaimEmailAssetResponse400> Failed
      */
-    postTransfersUserclaimEmailAsset(body: types.PostTransfersUserclaimEmailAssetBodyParam): Promise<FetchResponse<200, types.PostTransfersUserclaimEmailAssetResponse200>>;
-}
-declare const createSDK: SDK;
-export = createSDK;
+    SDK.prototype.postTransfersUserclaimEmailAsset = function (body) {
+        return this.core.fetch('/transfers/userClaim/email/asset', 'post', body);
+    };
+    return SDK;
+}());
+var createSDK = (function () { return new SDK(); })();
+module.exports = createSDK;
